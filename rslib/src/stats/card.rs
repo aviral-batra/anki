@@ -7,7 +7,7 @@ use crate::card::CardType;
 use crate::prelude::*;
 use crate::revlog::RevlogEntry;
 use crate::scheduler::fsrs::memory_state::single_card_revlog_to_item;
-use crate::scheduler::fsrs::weights::ignore_revlogs_before_ms_from_config;
+use crate::scheduler::fsrs::params::ignore_revlogs_before_ms_from_config;
 use crate::scheduler::timing::is_unix_epoch_timestamp;
 
 impl Collection {
@@ -130,7 +130,7 @@ impl Collection {
             .get_deck_config(conf_id)?
             .or_not_found(conf_id)?;
         let historical_retention = config.inner.historical_retention;
-        let fsrs = FSRS::new(Some(&config.inner.fsrs_weights))?;
+        let fsrs = FSRS::new(Some(config.fsrs_params()))?;
         let next_day_at = self.timing_today()?.next_day_at;
         let ignore_before = ignore_revlogs_before_ms_from_config(&config)?;
 
